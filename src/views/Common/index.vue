@@ -29,7 +29,7 @@
                     <li><a href="#citynow" data-toggle="tab">柳州学校</a></li>
                     <li class="dropdown">
                         <a href="#" id="myTabDrop1" class="dropdown-toggle" 
-                        data-toggle="dropdown">详情
+                        data-toggle="dropdown">排行
                             <b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu" role="menu" aria-labelledby="myTabDrop1">
@@ -53,6 +53,7 @@
                         </p>
                     </div>
                 </div>
+                <h4>学校简览</h4>
           <keep-alive>
             <router-view/>
          </keep-alive>
