@@ -3,20 +3,20 @@ export default{
     component:() =>import('@/views/Common'),
     children : [
         {
-            path : 'bigschool',
-            component : () => import('@/components/Bigschool')
+            path : 'swiper1',
+            component : () => import('@/components/Swiper1')
         },
         {
             path : 'location',
             component : () => import('@/components/Location')
         },
         {
-            path : 'rankschool',
-            component : () => import('@/components/Rankschool')
+            path : 'comments',
+            component : () => import('@/components/Comments')
         },
         {
-            path : 'searchschool',
-            component : () => import('@/components/Searchschool')
+            path : 'gotop',
+            component : () => import('@/components/Gotop')
         }
     ]
 }

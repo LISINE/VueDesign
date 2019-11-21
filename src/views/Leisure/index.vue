@@ -1,12 +1,13 @@
 <template>
-    <div>
- <Header title="search vue"/>
+    <div>     
+     <Header title="leisure vue"/>
     </div>
 </template>
 <script >
 import Header from '@/components/Header';
+
 export default{
-name:"search",
+name:"leisure",
 components:{
     Header
 }
