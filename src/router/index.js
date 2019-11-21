@@ -4,6 +4,7 @@ import commonRouter from './common'
 import mineRouter from './mine'  
 import searchRouter from './search'
 import schooldetail from'./schooldetail'
+import leisure from './leisure'
 Vue.use(VueRouter)
 
 
@@ -15,6 +16,7 @@ export default new VueRouter({
     mineRouter,
     searchRouter,
     schooldetail,
+    leisure,
     {
       path : '/*',
       redirect : '/common'

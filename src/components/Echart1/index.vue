@@ -39,7 +39,7 @@ name:'echart1',
             
         },
         series: [{
-            name: '销量',
+            name: '分数',
             type: 'bar',
             data: [30, 20, 36, 10, 10, 20]
         }],

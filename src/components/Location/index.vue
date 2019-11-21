@@ -1,20 +1,26 @@
 <template>
   <div class="city_body">
+<el-menu default-active="1" class="el-menu-vertical-demo city_index" @open="handleOpen" @close="handleClose" >
+  <el-submenu index="1" >
+      <i class="el-icon-location" style="margin-left:-50px;"></i>
+    <el-menu-item-group >
+      <el-menu-item  v-for="(item,index) in cityList" :key="item.index" @click=" handleToIndex(index)" >{{ item.index }}</el-menu-item>
+    </el-menu-item-group>
+ </el-submenu>
+</el-menu>
           <div class="city_list">
                     <div class="city_sort" ref="city_sort">
                         <div v-for="item in cityList" :key="item.index">
                             <h2>{{ item.index }}</h2>
-                            <ul>
-                                <li v-for="itemList in item.list" :key="itemList.id" >{{ itemList.nm }}</li>
-                            </ul>
+                             <el-row type=flex class="box">
+                               <el-col :span="6" v-for="itemList in item.list" :key="itemList.id" class="content" >
+                                   <div class="cnames">{{ itemList.nm }}
+                                   </div>
+                                   </el-col> 
+                             </el-row>    
                         </div>	
                     </div>
             </div>
-          <div class="city_index">
-            <ul>
-                <li v-for="(item,index) in cityList" :key="item.index" @click="handleToIndex(index)">{{ item.index }}</li>
-            </ul>
-         </div>
   </div>
 </template>
 <script>
@@ -87,21 +93,28 @@ export default {
             var h2 = this.$refs.city_sort.getElementsByTagName('h2');
             this.$refs.city_sort.parentNode.scrollTop = h2[index].offsetTop;
             // this.$refs.city_List.toScrollTop(-h2[index].offsetTop);
+        },
+        handleOpen(key, keyPath) {
+            console.log(key, keyPath);
+        },
+        handleClose(key, keyPath) {
+            console.log(key, keyPath);
         }
     }
 }
 </script>
 <style scoped>
 .city_body{ display: flex; width:80%; position: absolute;padding-left: 15%;}
-.city_body .city_list{ float:left;width:25%; max-height: 440px;flex:1; overflow: scroll; background: #FFF5F0;}
-.city_body .city_list::-webkit-scrollbar{
-    background-color:transparent;
-    width:0;
-}
-.city_body .city_sort div{ margin-top: 20px;}
-.city_body .city_sort h2{ padding-left: 15px; line-height: 30px; font-size: 14px; background:#F0F0F0; font-weight: normal;}
-.city_body .city_sort ul{ padding-left: 10px; margin-top: 10px;}
-.city_body .city_sort ul li{ line-height: 30px; }
-.city_body .city_index{ float: right; width:17%;display: flex; overflow: auto;flex-direction:column; justify-content:center; text-align: center; border-left:1px #e6e6e6 solid;padding-right: 10px}
+.city_body .city_list{ float:left;width:25%; max-height: 520px;flex:1; overflow: scroll; background:#f2edeb7a;}
+.city_body .city_list::-webkit-scrollbar{  background-color:transparent;width:0;}
+.city_body .city_sort div{ margin-top: 10px;}
+.cnames{background:#d8d9cc6b;width:7em;text-align: center;}
+.city_body .city_sort h2{text-align: center; line-height: 30px; font-size: 14px; background:#e8f6726b; font-weight: normal;}
+.box{ padding-left: 10px; margin-top: 10px;flex-wrap:wrap;}
+.content{ line-height: 30px;padding-left: 2.5em;}
+.city_body .city_index{ background-color:"#545c64"; width:17%;display: flex; overflow: auto;flex-direction:column; justify-content:center; text-align: center; border-left:1px #e6e6e6 solid;}
+.el-submenu .el-menu-item { height: 20px; line-height: 20px;padding: 0 5px;min-width: 20px;}
+.el-menu-item.is-active {color: #7e6862eb;}
+.el-submenu  { background-color:#f7e6a994;}
 </style>
 
