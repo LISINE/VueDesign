@@ -1,7 +1,7 @@
 <template>
  <div >
      <Header />
-     <Swiper1 />
+     <Swiper1 :arrItem='IndexData1'/>
 	 <!-- 学校简介 -->
  <div class="product-container">
 	<div class="product-tab-bar">
@@ -13,158 +13,7 @@
 			<span class="=on" @click="handletu2">学校排名</span>
 		</div>
 	</div>
-	<div v-if="istu" class="product-tab-wrap">
-		<div class="row">
-			<div class="theme col-sm-6 col-md-4"  @click="gotodetail">
-
-				<div class="thumbnail">
-					<img id="spot0" src="/images/jiangxuan_1.jpg" alt="广西科技大学">
-					<div class="caption">
-						<h3 id="description0 thumbnail_label">广西科技大学</h3>
-						<p id="sometext0" >一些示例文本。一些示例文本。</p>
-					</div>
-				</div>
-
-			</div>
-			<div class="theme col-sm-6 col-md-4">
-
-				<div class="thumbnail">
-					<img id="spot1" src="/images/jiangxuan_2.jpg" alt="广西科技大学鹿山学院">
-					<div class="caption">
-						<h3 id="description1 thumbnail_label">广西科技大学鹿山学院</h3>
-						<p id="sometext1" >一些示例文本。一些示例文本。</p>
-					</div>
-				</div>
-
-			</div>
-			<div class="theme col-sm-6 col-md-4">
-				<div class="thumbnail">
-					<img id="spot2" src="/images/jiangxuan_3.jpg" alt="柳州职业技术学院">
-					<div class="caption">
-						<h3 id="description2 thumbnail_label">柳州职业技术学院</h3>
-						<p id="sometext2" >一些示例文本。一些示例文本。</p>
-					</div>
-				</div>
-			</div>
-		</div>
-        <div class="row">
-			<div class="theme col-sm-6 col-md-4">
-
-				<div class="thumbnail">
-					<img id="spot0" src="/images/jiangxuan_4.jpg" alt="广西生态工程职业技术学院">
-					<div class="caption">
-						<h3 id="description0 thumbnail_label">广西生态工程职业技术学院</h3>
-						<p id="sometext0" >一些示例文本。一些示例文本。</p>
-					</div>
-				</div>
-
-			</div>
-			<div class="theme col-sm-6 col-md-4">
-
-				<div class="thumbnail">
-					<img id="spot1" src="/images/jiangxuan_5.jpg" alt="柳州铁道职业技术学院">
-					<div class="caption">
-						<h3 id="description1 thumbnail_label">柳州铁道职业技术学院</h3>
-						<p id="sometext1" >一些示例文本。一些示例文本。</p>
-					</div>
-				</div>
-
-			</div>
-			<div class="theme col-sm-6 col-md-4">
-				<div class="thumbnail">
-					<img id="spot2" src="/images/jiangxuan_6.jpg" alt="柳州城市职业技术学院">
-					<div class="caption">
-						<h3 id="description2 thumbnail_label">柳州城市职业技术学院</h3>
-						<p id="sometext2" >一些示例文本。一些示例文本。</p>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<el-tabs v-else type="border-card" class="mytabs">
-	<el-tab-pane label="大学排名">
-<template>
-  <el-table
-    :data="tableData1"
-    stripe
-    style="width: 100%">
-    <el-table-column
-      prop="rank"
-      label="排名"
-      width="100">
-    </el-table-column>
-    <el-table-column
-      prop="name"
-      label="学校名称"
-      width="250">
-    </el-table-column>
-    <el-table-column
-      prop="charge"
-      label="主管部门"
-	  width="200">
-    </el-table-column>
-	  <el-table-column
-      prop="level"
-      label="办学层次"
-	  width="180">
-    </el-table-column>
-	  <el-table-column
-      prop="remark"
-      label="备注"
-	  >
-    </el-table-column>
-  </el-table>
-</template>
-	</el-tab-pane>
-	<el-tab-pane label="住宿条件排名">
-<template>
-  <el-table
-    :data="tableData2"
-    stripe
-    style="width: 100%">
-    <el-table-column
-      prop="rank"
-      label="排名"
-      width="100">
-    </el-table-column>
-    <el-table-column
-      prop="name"
-      label="学校名称"
-      width="250">
-    </el-table-column>
-    <el-table-column
-      prop="accommodation"
-      label="住宿情况"
-	  >
-    </el-table-column>
-	  </el-table>
-</template>
-	</el-tab-pane>
-	<el-tab-pane label="校园面积排名">
-<template>
-  <el-table
-    :data="tableData3"
-    stripe
-    style="width: 100%">
-    <el-table-column
-      prop="rank"
-      label="排名"
-      width="100">
-    </el-table-column>
-    <el-table-column
-      prop="name"
-      label="学校名称"
-      width="250">
-    </el-table-column>
-    <el-table-column
-      prop="area"
-      label="住宿情况"
-	  >
-    </el-table-column>
-	  </el-table>
-</template>
-	</el-tab-pane>
-	</el-tabs>
+  <Thumbnails1 :msg="istu"  :thumbsData='IndexData2' />
 	<!-- 留言板 -->
 	    	<h3 class="liuyan">
 			<strong>学校新闻</strong>
@@ -189,13 +38,15 @@ import Location from '@/components/Location';
 import Swiper1 from '@/components/Swiper1';
 import Comments from '@/components/Comments';
 import Gotop from '@/components/Gotop';
-
+import Thumbnails1 from '@/components/Thumbnails1';
 export default{
 name:'common',
 data(){
     return{
      istu:true,
 	 btnFlag:false,
+	 IndexData1:[''],
+	 IndexData2:[''],
 	 tableData: [{
           date: '2016-05-03',
           name: '王小虎',
@@ -360,6 +211,19 @@ data(){
 		]
 	}
 },
+created(){
+		this.axios.get('/web1/queryIndex.action').then((res)=>{
+		console.log(res)
+		var arr1=res.data.big;
+		var arr2=res.data.midlle;
+		this.IndexData1=arr1;
+		this.IndexData2=arr2;
+		})
+		.catch(err => {
+        console.log("查询失败")
+        reject(err);
+      });
+},
 mounted () {
   window.addEventListener('scroll', this.scrollToTop)
 },
@@ -372,9 +236,6 @@ handletu1(){
 },
 handletu2(){
     this.istu=false
-}, 
-gotodetail(){
-	 this.$router.replace('/schooldetail')
 }
   },
 components:{
@@ -382,7 +243,9 @@ components:{
     Location,
     Swiper1,
 	Comments,
-	Gotop
+	Gotop,
+	Thumbnails1
+
 }
 }
 </script>

@@ -27,13 +27,16 @@
       <ul class="nav navbar-nav navbar-right">
          <li>
         <router-link class="myli" tag="a" to="/common/location" >
-		柳州
+		    柳州
         <i class="el-icon-caret-bottom"></i>
 		</router-link>
           </li>
           <li>
-        <router-link class="myli" tag="a" to="/mine" >
+     <router-link  v-if='isVip' class="myli" tag="a" to="/mine" >
 		 我的
+		</router-link>
+       <router-link  v-else class="myli" tag="a" to="/login" >
+		   登录
 		</router-link>
           </li>
       </ul>
@@ -51,6 +54,20 @@ props : {
             type : String,
             default : '柳州高校网'
         }
+    },
+    data(){
+      return{
+        isVip:false,
+        uname:''
+      }
+    },
+    watch(){
+      if(this.$store.getters.username===''){
+          this.isVip=false;
+      }else{
+        this.isVip=true;
+        this.uname=this.$store.getters.username;
+      }
     }
 }
 </script>

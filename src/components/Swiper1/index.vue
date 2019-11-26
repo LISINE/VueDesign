@@ -27,39 +27,11 @@ export default {
 		pagination: {
 			el: '.swiper-pagination',
 		},
-		autoplay: 500,//可选选项，自动滑动
+		observer: true, //修改swiper自己或子元素时，自动初始化swiper
+        observeParents: true //修改swiper的父元素时，自动初始化swiper
 	})
 },
-data(){
-	return {
-			arrItem:[
-					{
-							name:'swiperSlide1',
-							imgUrl:'/images/banner_1.jpg'
-					},
-					{
-							name:'swiperSlide2',
-							imgUrl:'/images/banner_2.jpg'
-					},
-					{
-							name:'swiperSlide3',
-							imgUrl:'/images/banner_3.jpg'
-					},
-					{
-							name:'swiperSlide4',
-							imgUrl:'/images/banner_4.jpg'
-					},
-					{
-							name:'swiperSlide5',
-							imgUrl:'/images/banner_5.jpg'
-					},
-					{
-							name:'swiperSlide6',
-							imgUrl:'/images/banner_6.jpg'
-					}
-			]
-	}
-}
+props:['arrItem']
 
 }
 </script>
