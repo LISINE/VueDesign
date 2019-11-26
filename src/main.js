@@ -2,6 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+import Vuex from 'vuex' //引入状态管理
 
 
 //这样就可以用this.axios在其他文件中随意使用axios
@@ -17,7 +18,7 @@ Vue.prototype.Swiper = Swiper
 // 引入ElementUI
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
-Vue.use(ElementUI)
+Vue.use(ElementUI,Vuex)
 
 
 new Vue({

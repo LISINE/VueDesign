@@ -1,5 +1,6 @@
 export default{
     path:'/schooldetail',
+    name:'schooldetail',
     component:() =>import('@/views/Schooldetail'),
     children : [
         {

@@ -1,5 +1,6 @@
 export default{
     path:'/common',
+    name:'common',
     component:() =>import('@/views/Common'),
     children : [
         {
@@ -17,6 +18,10 @@ export default{
         {
             path : 'gotop',
             component : () => import('@/components/Gotop')
+        },
+        {
+            path : 'thumbnails1',
+            component : () => import('@/components/Thumbnails1')
         }
     ]
 }

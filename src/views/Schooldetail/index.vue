@@ -2,13 +2,13 @@
 <div class="container">
   <el-breadcrumb separator-class="el-icon-arrow-right">
   <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-  <el-breadcrumb-item>广西科技大学</el-breadcrumb-item>
-</el-breadcrumb>
-  <h2>广西科技大学</h2>
+  <el-breadcrumb-item>{{mytitle}}</el-breadcrumb-item>
+  </el-breadcrumb>
+  <h2>{{mytitle}}</h2>
   <!-- 小介绍 -->
   <div class="media">
     <div class="media-left media-top">
-      <img src="https://static.runoob.com/images/mix/img_avatar.png" class="media-object img-thumbnail" style="width:180px">
+      <img :src="xiaohui" class="media-object img-thumbnail" style="width:180px">
 	  </div>
     <div class="media-body">
     <table class="table">
@@ -38,8 +38,7 @@
       <div class="panel-heading">
           <h3 class="panel-title">学校历史</h3>
       </div>
-      <div class="panel-body">
-          这是一个基本的面板
+      <div class="panel-body notice" v-html="history" >
       </div>
   </div>
 </div>
@@ -71,6 +70,7 @@ import Comments from'@/components/Comments';
 import Gotop from '@/components/Gotop';
 import Swiper2 from '@/components/Swiper2';
 import Addcomment from '@/components/Addcomment';
+import { type } from 'os';
 export default {
     name:"schooldetail",
     components:{
@@ -79,11 +79,35 @@ export default {
       Gotop,
       Swiper2,
       Addcomment
-    },   
+    }, 
+    created(){
+     var scl=this.$route.query.school;
+      console.log(scl)
+  	 this.axios.get('/web1/querySchool.action',{params:{
+      'school':scl
+    }}).then((res)=>{
+       console.log(res)
+      var arr1=res.data.xiao;
+      var arr2=res.data.su1;
+      var arr3=res.data.su2;
+      this.mytitle=arr1[0].name;
+      this.xiaohui=arr1[0].imgUrl;
+      this.history=arr1[0].desc;
+      this.arrItem1=arr2;
+      this.arrItem2=arr3;
+    }).catch(err => {
+        console.log("查询失败")
+        reject(err);
+      });
+
+    }, 
      data() {
       return {
+        mytitle:'',
+        xiaohui:'',
+        history:'',
+        username:'',
         activeName: '1',
-        username:'广西科技大学',
         tableData: [{
           name: '王小虎',
           school: '普陀区',
@@ -115,66 +139,8 @@ export default {
           message: '上海市普陀区金沙江路 1518 弄'
         }
         ],
-        	arrItem1:[
-					{
-							name:'swiperSlide1',
-							imgUrl:'/images//gkd1.jpg'
-					},
-					{
-							name:'swiperSlide2',
-							imgUrl:'/images/gkd2.jpg'
-					},
-					{
-							name:'swiperSlide3',
-							imgUrl:'/images/gkd3.jpg'
-					},
-					{
-							name:'swiperSlide4',
-							imgUrl:'/images/gkd4.jpg'
-					},
-					{
-							name:'swiperSlide5',
-							imgUrl:'/images/gkd5.jpg'
-					},
-					{
-							name:'swiperSlide6',
-							imgUrl:'/images/gkd6.jpg'
-					},
-					{
-							name:'swiperSlide7',
-							imgUrl:'/images/gkd7.jpg'
-					}
-			],
-        	arrItem2:[
-					{
-							name:'swiperSlide1',
-							imgUrl:'/images//gkd1m.jpg'
-					},
-					{
-							name:'swiperSlide2',
-							imgUrl:'/images/gkd2m.jpg'
-					},
-					{
-							name:'swiperSlide3',
-							imgUrl:'/images/gkd3m.jpg'
-					},
-					{
-							name:'swiperSlide4',
-							imgUrl:'/images/gkd4m.jpg'
-					},
-					{
-							name:'swiperSlide5',
-							imgUrl:'/images/gkd5m.jpg'
-					},
-					{
-							name:'swiperSlide6',
-							imgUrl:'/images/gkd6m.jpg'
-					},
-					{
-							name:'swiperSlide7',
-							imgUrl:'/images/gkd7m.jpg'
-					}
-			]
+        	arrItem1:[''],
+        	arrItem2:['']
     }
   }
 }
@@ -184,6 +150,11 @@ export default {
 .td1{text-align: right;width:5%;}
 .td2{text-align: left;width:5%;}
 .panel-primary{margin-top: 3%;}
+.notice p {
+	line-height: 24px;
+	font-size: 16px;
+	margin-bottom: 20px;
+}
 .sushetu{
   padding: 10px 0px;
 }
