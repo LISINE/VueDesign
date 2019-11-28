@@ -1,5 +1,16 @@
 <template>
-<el-form :label-position="right" label-width="80px" status-icon :rules="rules" :model="ruleForm" ref="ruleForm" class="myloginform"> 
+  <div id="login">
+    <div id="bgd">
+      <canvas
+        id='myCanvas'
+        :width='width'
+        :height='height'
+      >
+      </canvas>
+    </div>
+    <div id="loginBox">
+      <h1 class="lgtitle">登录</h1>
+      <el-form label-position="right" label-width="80px" status-icon :rules="rules" :model="ruleForm" ref="ruleForm" class="myloginform"> 
     <el-form-item label="用户名" prop="name">
     <el-input v-model="ruleForm.name">{{oncename}}</el-input>
   </el-form-item>
@@ -9,11 +20,13 @@
     <el-form-item>
     <el-button type="primary" @click="submitForm('ruleForm')">立即登录</el-button>
     <el-button @click="resetForm('ruleForm')">重置</el-button>
-    <router-link   tag="a" to="/register" >
-		还没注册？快去注册
-	</router-link>
+       <router-link class="zhucetext" tag="a" to="/register" >
+  还没注册？点击这里
+        </router-link> 
   </el-form-item>
 </el-form>
+    </div>
+  </div>
 </template>
 <script>
 export default {
@@ -45,29 +58,84 @@ export default {
           pass: [
             { validator: validatePass, trigger: 'blur' }
           ]
+        },
+         canvas: null,
+      context: null,
+      stars: [], //星星数组
+      shadowColorList: [
+        "#39f",
+        "#ec5707",
+        "#b031d4",
+        "#22e6c7",
+        "#92d819",
+        "#14d7f1",
+        "#e23c66"
+      ], //阴影颜色列表
+      directionList: ["leftTop", "leftBottom", "rightTop", "rightBottom"], //星星运行方向
+      speed: 50, //星星运行速度
+      last_star_created_time: new Date(), //上次重绘星星时间
+      Ball: class Ball {
+        constructor(radius) {
+          this.x = 0;
+          this.y = 0;
+          this.radius = radius;
+          this.color = "";
+          this.shadowColor = "";
+          this.direction = "";
         }
+
+        draw(context) {
+          context.save();
+          context.translate(this.x, this.y);
+          context.lineWidth = this.lineWidth;
+          var my_gradient = context.createLinearGradient(0, 0, 0, 8);
+          my_gradient.addColorStop(0, this.color);
+          my_gradient.addColorStop(1, this.shadowColor);
+          context.fillStyle = my_gradient;
+          context.beginPath();
+          context.arc(0, 0, this.radius, 0, Math.PI * 2, true);
+          context.closePath();
+
+          context.shadowColor = this.shadowColor;
+          context.shadowOffsetX = 0;
+          context.shadowOffsetY = 0;
+          context.shadowBlur = 10;
+
+          context.fill();
+          context.restore();
+        }
+      }, //工厂模式定义Ball类
+      width: window.innerWidth,
+      height: window.innerHeight,
         }
     },
     mounted(){
      this.oncename=this.$route.params.username;
+     this.canvas = document.getElementById("myCanvas");
+    this.context = this.canvas.getContext("2d");
+
+    this.createStar(true);
+    this.drawFrame();
     },
    methods: {
       submitForm(formName) {
+        var _this=this
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.axios.post('/web1/login.action',{params:{
+            this.axios.post('/web1/login.action', this.$qs.stringify({
           username:this.ruleForm.name,
           pass:this.ruleForm.pass
-         }}).then((res)=>{
+         })).then((res)=>{
        console.log(res)
-        if(res.data==='success'){
+        if(res.data.isOk==='success'){
           // 跳转到首页
-                setTimeout(function(){
-                    that.$router.push({name:'common'})
-                },1000)
-                localStorage.setItem('token',res.data.token)
-                // 将登录名使用vuex传递到Home页面
-                this.$store.commit('handleUserName',res.data.username);
+                 localStorage.clear()
+                 this.$store.dispatch("login/addToken",res.data.token)
+                 this.$store.dispatch("login/addName", res.data.username)  
+                 this.$store.dispatch("login/changeVip", "true")  
+                
+                         console.log(_this.$store.state.login.username)
+                 this.$router.go(-1); 
         }else{
           console.log('error submit!!');
             return false;
@@ -81,14 +149,152 @@ export default {
       },
       resetForm(formName) {
         this.$refs[formName].resetFields();
+      },
+      //重复动画
+    drawFrame() {
+      let animation = requestAnimationFrame(this.drawFrame);
+      this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+      this.createStar(false);
+      this.stars.forEach(this.moveStar);
+    },
+    //展示所有的星星
+    createStar(params) {
+      let now = new Date();
+      if (params) {
+        //初始化星星
+        for (var i = 0; i < 50; i++) {
+          const radius = Math.random() * 3 + 2;
+          let star = new this.Ball(radius);
+          star.x = Math.random() * this.canvas.width + 1;
+          star.y = Math.random() * this.canvas.height + 1;
+          star.color = "#ffffff";
+          star.shadowColor = this.shadowColorList[
+            Math.floor(Math.random() * this.shadowColorList.length)
+          ];
+          star.direction = this.directionList[
+            Math.floor(Math.random() * this.directionList.length)
+          ];
+          this.stars.push(star);
+        }
+      } else if (!params && now - this.last_star_created_time > 3000) {
+        //每隔3秒重绘修改颜色其中30个球阴影颜色
+        for (var i = 0; i < 30; i++) {
+          this.stars[i].shadowColor = this.shadowColorList[
+            Math.floor(Math.random() * this.shadowColorList.length)
+          ];
+        }
+        this.last_star_created_time = now;
       }
+    },
+    //移动
+    moveStar(star, index) {
+      if (star.y - this.canvas.height > 0) {
+        //触底
+        if (Math.floor(Math.random() * 2) === 1) {
+          star.direction = "leftTop";
+        } else {
+          star.direction = "rightTop";
+        }
+      } else if (star.y < 2) {
+        //触顶
+        if (Math.floor(Math.random() * 2) === 1) {
+          star.direction = "rightBottom";
+        } else {
+          star.direction = "leftBottom";
+        }
+      } else if (star.x < 2) {
+        //左边
+        if (Math.floor(Math.random() * 2) === 1) {
+          star.direction = "rightTop";
+        } else {
+          star.direction = "rightBottom";
+        }
+      } else if (star.x - this.canvas.width > 0) {
+        //右边
+        if (Math.floor(Math.random() * 2) === 1) {
+          star.direction = "leftBottom";
+        } else {
+          star.direction = "leftTop";
+        }
+      }
+      if (star.direction === "leftTop") {
+        star.y -= star.radius / this.speed;
+        star.x -= star.radius / this.speed;
+      } else if (star.direction === "rightBottom") {
+        star.y += star.radius / this.speed;
+        star.x += star.radius / this.speed;
+      } else if (star.direction === "leftBottom") {
+        star.y += star.radius / this.speed;
+        star.x -= star.radius / this.speed;
+      } else if (star.direction === "rightTop") {
+        star.y -= star.radius / this.speed;
+        star.x += star.radius / this.speed;
+      }
+      star.draw(this.context);
+    }
     }
 }
 </script>
 <style scoped>
+.el-form-item__label{
+    color: #f1d64ed4;
+}
 .myloginform{
   width:70%;
-  padding-left: 30%;
+  padding-left: 32%;
+  padding-top:5%;
+  } 
+  .lgtitle{
+  padding-left: 50%;
   padding-top:10%;
   }
+  #login {
+  width: 100vw;
+  padding: 0;
+  margin: 0;
+  height: 100vh;
+  font-size: 16px;
+  background-repeat: no-repeat;
+  background-position: left top;
+  background-color: #242645;
+  color: #fff;
+  font-family: "Source Sans Pro";
+  background-size: 100%;
+  background-image: url("/images/denglu.jpg");
+  position: relative;
+  }
+  #bgd {
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+  }
+  #loginBox {
+  
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    padding: 50px 40px 40px 40px;
+    box-shadow: -15px 15px 15px rgba(6, 17, 47, 0.7);
+    opacity: 1;
+    background: linear-gradient(
+      230deg,
+      rgba(53, 57, 74, 0) 0%,
+      rgb(0, 0, 0) 100%
+    )
+}
+.el-button--primary{
+ margin-left: 60px;
+    background-color: transparent;
+     color: #dce1e7;
+}
+.zhucetext{
+  padding-left: 20px;
+      border: none;
+      color: #fff;
+      background-color: transparent;
+      font-size: 19px;
+}
 </style>>
