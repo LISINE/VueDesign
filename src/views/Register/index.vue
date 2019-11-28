@@ -15,10 +15,14 @@
     <el-form-item>
     <el-button type="primary" @click="submitForm('ruleForm')">立即注册</el-button>
     <el-button @click="resetForm('ruleForm')">重置</el-button>
+   <router-link class="zhucetext" tag="a" to="/login" >
+        已有账号？点击登录
+        </router-link> 
   </el-form-item>
 </el-form>
 </template>
 <script>
+
 export default {
     name:'register',
     data(){
@@ -70,11 +74,11 @@ export default {
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-          this.axios.post('/web1/register.action',{
+          this.axios.post('/web1/register.action', this.$qs.stringify({
           username:this.ruleForm.name,
           pass:this.ruleForm.pass,
           email:this.ruleForm.email
-         }).then((res)=>{
+         })).then((res)=>{
        console.log(res)
         if(res.data==='success'){
              this.$router.push({

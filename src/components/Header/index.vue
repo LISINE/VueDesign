@@ -32,14 +32,15 @@
 		</router-link>
           </li>
           <li>
-     <router-link  v-if='isVip' class="myli" tag="a" to="/mine" >
-		 我的
+     <router-link v-if='$store.state.login.isVip' class="myli" tag="a" to="/mine" >
+	   	您好，{{$store.state.login.username}}
 		</router-link>
-       <router-link  v-else class="myli" tag="a" to="/login" >
-		   登录
+     <i class="el-icon-delete myli" v-if='$store.state.login.isVip' @click="logout()">注销</i>
+      <router-link  v-else class="myli" tag="a" to="/login">
+		   我要登录
 		</router-link>
           </li>
-      </ul>
+      </ul>i
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
@@ -55,20 +56,11 @@ props : {
             default : '柳州高校网'
         }
     },
-    data(){
-      return{
-        isVip:false,
-        uname:''
-      }
-    },
-    watch(){
-      if(this.$store.getters.username===''){
-          this.isVip=false;
-      }else{
-        this.isVip=true;
-        this.uname=this.$store.getters.username;
-      }
+  methods:{
+    logout(){
+       this.$store.dispatch("login/logout", this.$store.state.login.username)  
     }
+  }
 }
 </script>
 
@@ -76,5 +68,6 @@ props : {
 .navbar-default{background-color: #79a4ba5e}
 .navbar-brand img{width: 80px;height: 50px;margin-top: -14px;}
 .router-link-active{background-color: #c4a56063;height: 100%;}
-.myli{text-align: center;width: 100px;line-height: 114%;padding:17%;font-size: 15px;}
+.myli{float: left;min-width:100px;line-height: 114%;font-size: 15px;text-align: center;}
+.el-icon-delete{padding: 8%;}
 </style>
