@@ -1,5 +1,5 @@
 <template>
-<el-form label-position="right" label-width="80px" status-icon :rules="rules" :model="ruleForm" ref="ruleForm" class="myregisterform"> 
+<el-form label-position="right" label-width="80px" status-icon :rules="rules" :model="ruleForm" ref="ruleForm"> 
     <el-form-item label="用户名称" prop="name">
     <el-input v-model="ruleForm.name"></el-input>
   </el-form-item>
@@ -15,9 +15,9 @@
     <el-form-item>
     <el-button type="primary" @click="submitForm('ruleForm')">立即注册</el-button>
     <el-button @click="resetForm('ruleForm')">重置</el-button>
-   <router-link class="zhucetext" tag="a" to="/login" >
+       <a class="zhucetext" @click="accept()" >
         已有账号？点击登录
-        </router-link> 
+        </a> 
   </el-form-item>
 </el-form>
 </template>
@@ -89,25 +89,41 @@ export default {
       })
         }else{
           console.log('error submit!!');
+               this.$message.error('注册失败，用户名已存在'); 
             return false;
         }
        }).catch(err => {
         console.log("查询失败")
         console.log(err);
+      
       }); 
           } 
         });
       },
       resetForm(formName) {
         this.$refs[formName].resetFields();
+      },
+      accept(){
+         this.$emit('accept')
       }
     }
 }
 </script>
 <style scoped>
-.myregisterform{
-  width:60%;
-  padding-left: 30%;
-  padding-top:10%;
-  }
+.el-form-item__label{
+    color: #f1d64ed4;
+}
+
+.el-button--primary{
+ margin-left: 60px;
+    background-color: transparent;
+     color: #dce1e7;
+}
+.zhucetext{
+  padding-left: 20px;
+      border: none;
+      color: #fff;
+      background-color: transparent;
+      font-size: 19px;
+}
 </style>>
