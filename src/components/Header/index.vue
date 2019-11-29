@@ -36,11 +36,11 @@
 	   	您好，{{$store.state.login.username}}
 		</router-link>
      <i class="el-icon-delete myli" v-if='$store.state.login.isVip' @click="logout()">注销</i>
-      <router-link  v-else class="myli" tag="a" to="/login">
+      <router-link  v-else class="myli" tag="a" to="/vip">
 		   我要登录
 		</router-link>
           </li>
-      </ul>i
+      </ul>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>

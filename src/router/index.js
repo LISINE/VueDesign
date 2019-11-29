@@ -5,8 +5,7 @@ import mineRouter from './mine'
 import searchRouter from './search'
 import schooldetail from'./schooldetail'
 import leisure from './leisure'
-import register from './register'
-import login from './login'
+import vip from './vip'
 Vue.use(VueRouter)
 
 
@@ -19,8 +18,7 @@ export default new VueRouter({
     searchRouter,
     schooldetail,
     leisure,
-    register,
-    login,
+    vip,
     {
       path : '/*',
       redirect : '/common'

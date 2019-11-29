@@ -8,58 +8,30 @@
       >
       </canvas>
     </div>
-    <div id="loginBox">
-      <h1 class="lgtitle">登录</h1>
-      <el-form label-position="right" label-width="80px" status-icon :rules="rules" :model="ruleForm" ref="ruleForm" class="myloginform"> 
-    <el-form-item label="用户名" prop="name">
-    <el-input v-model="ruleForm.name">{{oncename}}</el-input>
-  </el-form-item>
-  <el-form-item label="密码" prop="pass">
-    <el-input type="password" v-model="ruleForm.pass" autocomplete="off"></el-input>
-  </el-form-item>
-    <el-form-item>
-    <el-button type="primary" @click="submitForm('ruleForm')">立即登录</el-button>
-    <el-button @click="resetForm('ruleForm')">重置</el-button>
-       <router-link class="zhucetext" tag="a" to="/register" >
-  还没注册？点击这里
-        </router-link> 
-  </el-form-item>
-</el-form>
-    </div>
+    <div id="loginBox" v-if="show">
+            <p class="lgtitle">登录</p>
+     <Login @accept="change"/>
+ </div>   
+  <div id="registerBox" v-else>
+            <p class="lgtitle">注册</p>
+     <Register @accept="change"/>
+ </div>
   </div>
 </template>
 <script>
+import Login from '@/components/Login';
+import Register from '@/components/Register';
 export default {
-    name:'login',
+    name:'vip',
+    components:{
+    Register,
+    Login
+    },
     data(){
-         var validatePass = (rule, value, callback) => {
-        if (value === '') {
-          callback(new Error('请输入密码'));
-        } else {
-          if (this.ruleForm.checkPass !== '') {
-            this.$refs.ruleForm.validateField('checkPass');
-          }
-          callback();
-        }
-      };
+       
         return{
-            oncename:'',
-            ruleForm:{
-              name:'',
-              pass:'',
-              checkPass:'',
-              email:''
-            },
-          rules: {
-         name: [
-            { required: true, message: '请输入用户昵称', trigger: 'blur' },
-            { min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur' }
-          ],
-          pass: [
-            { validator: validatePass, trigger: 'blur' }
-          ]
-        },
-         canvas: null,
+       show:true,
+      canvas: null,
       context: null,
       stars: [], //星星数组
       shadowColorList: [
@@ -110,46 +82,16 @@ export default {
         }
     },
     mounted(){
-     this.oncename=this.$route.params.username;
-     this.canvas = document.getElementById("myCanvas");
+    this.canvas = document.getElementById("myCanvas");
     this.context = this.canvas.getContext("2d");
-
     this.createStar(true);
     this.drawFrame();
     },
    methods: {
-      submitForm(formName) {
-        var _this=this
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            this.axios.post('/web1/login.action', this.$qs.stringify({
-          username:this.ruleForm.name,
-          pass:this.ruleForm.pass
-         })).then((res)=>{
-       console.log(res)
-        if(res.data.isOk==='success'){
-          // 跳转到首页
-                 localStorage.clear()
-                 this.$store.dispatch("login/addToken",res.data.token)
-                 this.$store.dispatch("login/addName", res.data.username)  
-                 this.$store.dispatch("login/changeVip", "true")  
-                
-                         console.log(_this.$store.state.login.username)
-                 this.$router.go(-1); 
-        }else{
-          console.log('error submit!!');
-            return false;
-        }
-       }).catch(err => {
-        console.log("查询失败")
-        reject(err);
-      }); 
-          } 
-        });
-      },
-      resetForm(formName) {
-        this.$refs[formName].resetFields();
-      },
+       change(){
+           let a=this.show
+           this.show=!a
+       },
       //重复动画
     drawFrame() {
       let animation = requestAnimationFrame(this.drawFrame);
@@ -236,17 +178,10 @@ export default {
 }
 </script>
 <style scoped>
-.el-form-item__label{
-    color: #f1d64ed4;
-}
-.myloginform{
-  width:70%;
-  padding-left: 32%;
-  padding-top:5%;
-  } 
+
   .lgtitle{
-  padding-left: 50%;
-  padding-top:10%;
+font-size: 45px;
+    text-align: center;
   }
   #login {
   width: 100vw;
@@ -269,13 +204,14 @@ export default {
     overflow: hidden;
   }
   #loginBox {
-  
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
     margin: auto;
+    width: 50%;
+    height: 50%;
     padding: 50px 40px 40px 40px;
     box-shadow: -15px 15px 15px rgba(6, 17, 47, 0.7);
     opacity: 1;
@@ -285,16 +221,24 @@ export default {
       rgb(0, 0, 0) 100%
     )
 }
-.el-button--primary{
- margin-left: 60px;
-    background-color: transparent;
-     color: #dce1e7;
+#registerBox{
+     width: 50%;
+    height: 65%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+
+    padding: 50px 40px 40px 40px;
+    box-shadow: -15px 15px 15px rgba(6, 17, 47, 0.7);
+    opacity: 1;
+    background: linear-gradient(
+      230deg,
+      rgba(53, 57, 74, 0) 0%,
+      rgb(0, 0, 0) 100%
+    )
 }
-.zhucetext{
-  padding-left: 20px;
-      border: none;
-      color: #fff;
-      background-color: transparent;
-      font-size: 19px;
-}
+
 </style>>
